@@ -50,12 +50,82 @@
         
     }
 
-    /*h5 a {
-        color: #737070;
-    }*/
-
     h5 a:hover {
         text-decoration: none;
+    }
+
+    html, body {
+        background-color: #fff;
+        color: #636b6f;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 200;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .full-height {
+        height: 100vh;
+    }
+
+    .flex-center {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    .position-ref {
+        position: relative;
+    }
+
+    .top-right {
+        position: absolute;
+        right: 10px;
+        top: 18px;
+    }
+
+    .content {
+        text-align: center;
+    }
+
+    .title {
+        font-size: 84px;
+    }
+
+    .links > a {
+        color: #636b6f;
+        padding: 0 25px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: .1rem;
+        text-decoration: none;
+        text-transform: uppercase;
+    }
+
+    .m-b-md {
+        margin-bottom: 30px;
+    }
+
+    .rodape {
+        margin-top: 50px;
+        width: 100%;
+    }
+    @media (min-width: 992px) { 
+        .rodape {            
+            bottom: 0;
+            width: 100%;
+        }
+    }
+
+    .lead {
+        display: inline-block;
+        margin-top: -50px;
+    }
+
+    .txt-user:hover, .txt-user:active, .txt-user:focus {
+        color: white !important;
+    }
+    .txt-user {
+        color: #3490dc !important;
     }
     
     </style>
@@ -66,10 +136,10 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    <img src="{{ asset('imgs/logo.png') }}" width="120px">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -95,7 +165,7 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle btn btn-outline-primary px-3 txt-user" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
@@ -118,48 +188,55 @@
         </nav>
 
         <main class="py-4">
+            @if (Auth::check())
             <button type="button" class="btn btn-primary fixed-bottom float-btn shadow" data-toggle="modal" data-target="#newNote"></button>
+            @else
+            <a href="{{ route('login') }}" class="btn btn-primary fixed-bottom float-btn shadow"></a>
+            @endif
             @yield('content')
         </main>
+        <div class="links position-absolute mb-5 text-center rodape">
+            <a href="https://github.com/stthrudell/app-notas" target="_blank">Feito com ♥ | Github </a>
+        </div>        
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="newNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalCenterTitle">Criar uma nova nota</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+        <div class="modal fade" id="newNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Criar uma nova nota</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                <form method="post" action="{{ route('notas.store') }}">
+                    @csrf
+                    <div class="input-group flex-nowrap mb-3">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">Título</span>
+                        </div>
+                        <input type="text" name="title" class="form-control" placeholder="Insira o título da nota" aria-label="Username" aria-describedby="addon-wrapping" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="text" placeholder="Sua nota..." required></textarea>
+                    </div>
+                    <div class="input-group mb-5">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Visibilidade</label>
+                        </div>
+                        <select class="custom-select" id="inputGroupSelect01" name="is_public">
+                            <option value="0" selected>Privado</option>
+                            <option value="1">Público</option>
+                        </select>
+                    </div>                
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Criar</button>                
+                </form>
+                </div>
             </div>
-            <div class="modal-body">
-            <form method="post" action="{{ route('notas.store') }}">
-                @csrf
-                <div class="input-group flex-nowrap mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="addon-wrapping">Título</span>
-                    </div>
-                    <input type="text" name="title" class="form-control" placeholder="Insira o título da nota" aria-label="Username" aria-describedby="addon-wrapping">
-                </div>
-                <div class="form-group">
-                    <textarea class="form-control" name="text" placeholder="Sua nota..."></textarea>
-                </div>
-                <div class="input-group mb-5">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01">Visibilidade</label>
-                    </div>
-                    <select class="custom-select" id="inputGroupSelect01" name="is_public">
-                        <option value="0" selected>Privado</option>
-                        <option value="1">Público</option>
-                    </select>
-                </div>                
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Criar</button>                
-            </form>
             </div>
         </div>
-        </div>
-    </div>
     </body>
 </html>

@@ -63,7 +63,11 @@ class NotasController extends Controller
     public function show($id)
     {
         $nota = Nota::find($id);
+        if ($nota == null) {
+            abort(404);
+        }
         $user = $nota->user;
+        
         $user_logged = Auth::id();
         $isPublic = '';
         $isPrivate = '';

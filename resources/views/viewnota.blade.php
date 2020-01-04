@@ -12,7 +12,7 @@
         </div>        
         <div class="col-md-6">
             <div class="card text-center shadow mb-5">
-                @auth
+                @if ($user_logged == $nota->user_id)
                 <div class="text-right pr-3 pt-2">                    
                     <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#deleteNote">
                         <img src="{{ asset('icons/x.svg') }}" alt="" width="25" height="25" title="Deletar">
@@ -20,8 +20,8 @@
                     <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#editNote">
                         <img src="{{ asset('icons/pencil.svg') }}" alt="" width="20" height="20" title="Editar">
                     </button>
-                </div>
-                @endauth
+                </div>                    
+                @endif
                 <div class="card-body">
                     @if ($nota->is_public == 1 || $user_logged == $nota->user_id)
                         <h5 class="card-title">{{ $nota->title }}</h5>
@@ -87,10 +87,10 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="addon-wrapping">Título</span>
                 </div>
-            <input type="text" name="title" class="form-control" placeholder="Insira o título da nota" aria-label="Username" aria-describedby="addon-wrapping" value="{{ $nota->title }}">
+            <input type="text" name="title" class="form-control" placeholder="Insira o título da nota" aria-label="Username" aria-describedby="addon-wrapping" value="{{ $nota->title }}" required>
             </div>
             <div class="form-group">
-                <textarea class="form-control" name="text" placeholder="Sua nota...">{{ $nota->text }}</textarea>
+                <textarea class="form-control" name="text" placeholder="Sua nota..." required>{{ $nota->text }}</textarea>
             </div>
             <div class="input-group mb-5">
                 <div class="input-group-prepend">
