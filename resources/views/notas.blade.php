@@ -16,15 +16,15 @@
                             @if (isset($nota->created_at))
                                 <p class="card-text mb-3"><small class="text-muted">Criado em {{ $nota->created_at->format('d/m/Y') }}</small></p>
                             @endif
-                            
+
                             @if ($nota->is_public == 1)
                                 <p class="card-text mb-3 text-right"><small class="text-success"><strong>Público</strong></small></p>
                             @else
                                 <p class="card-text mb-3 text-right"><small class="text-danger"><strong>Privado</strong></small></p>
                             @endif
-                        </div>                    
+                        </div>
                     </a>
-                </div>            
+                </div>
             </div>
             @endforeach
         @else

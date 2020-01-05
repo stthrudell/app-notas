@@ -130,16 +130,31 @@
     
     </style>
 
-
-
+    <script>
+        function loaded() {
+            window.$('[data-toggle="popover"]').popover({
+                trigger: 'focus',
+                delay: { "show": 0, "hide": 2000 }
+            });
+        }
+        
+        function copyClipboard(texto){
+            const el = document.createElement('textarea');
+            el.value = texto;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        }
+    </script>
 
 </head>
-<body>
+<body onload="loaded()">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="{{ asset('imgs/logo.png') }}" width="120px">
+                    <img src="{{ asset('icons/columns-gutters.svg') }}" width="80px" style="opacity: .5;">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -196,7 +211,7 @@
             @yield('content')
         </main>
         <div class="links position-absolute mb-5 text-center rodape">
-            <a href="https://github.com/stthrudell/app-notas" target="_blank">Feito com ♥ | Github </a>
+            <a href="https://github.com/stthrudell/app-notas" target="_blank">Feito com <img src="{{ asset('icons/heart.svg') }}" width="20px"> | Github </a>
         </div>        
     </div>
 

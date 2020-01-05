@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12  text-center mb-5">
-        <h1 class="display-4">Nota de {{ $user->name }}</h1>
+        <h1 class="display-4">Nota de {{ $nota->user->name }}</h1>
             @auth
                 <p><a href="{{route('notas.index')}}">< voltar</a></p>
             @endauth
@@ -12,7 +12,7 @@
         </div>        
         <div class="col-md-6">
             <div class="card text-center shadow mb-5">
-                @if ($user_logged == $nota->user_id)
+                @if (Auth::id() == $nota->user_id)
                 <div class="text-right pr-3 pt-2">                    
                     <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#deleteNote">
                         <img src="{{ asset('icons/x.svg') }}" alt="" width="25" height="25" title="Deletar">
@@ -20,10 +20,14 @@
                     <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#editNote">
                         <img src="{{ asset('icons/pencil.svg') }}" alt="" width="20" height="20" title="Editar">
                     </button>
+                    </button>
+                    <button type="button" class="close" onclick="copyClipboard('{{ route('notas.show', $nota->id) }}')" data-toggle="popover" data-content="Copiado para área de transferência!">
+                        <img src="{{ asset('icons/reply.svg') }}" width="25" height="25" title="Compartilhar">
+                    </button>
                 </div>                    
                 @endif
                 <div class="card-body">
-                    @if ($nota->is_public == 1 || $user_logged == $nota->user_id)
+                    @if ($nota->is_public == 1 || Auth::id() == $nota->user_id)
                         <h5 class="card-title">{{ $nota->title }}</h5>
                         <p class="card-text">{{ $nota->text }}</p>
                         @if (isset($nota->created_at))
@@ -97,8 +101,8 @@
                     <label class="input-group-text" for="inputGroupSelect01">Visibilidade</label>
                 </div>
                 <select class="custom-select" name="is_public">
-                    <option value="0" {{ $isPrivate }} >Privado</option>
-                    <option value="1" {{ $isPublic }} >Público</option>
+                    <option value="0" {{ $nota->is_public ? '' : 'selected' }} >Privado</option>
+                    <option value="1" {{ $nota->is_public ? 'selected' : '' }} >Público</option>
                 </select>
             </div>            
                            

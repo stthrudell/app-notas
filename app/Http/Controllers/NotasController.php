@@ -25,8 +25,8 @@ class NotasController extends Controller
         $user = User::all()->find($user_id);
         $notas = $user->notas;
         return view('notas', [
-                'notas' => $notas
-            ]);
+            'notas' => $notas
+        ]);
     }
 
     /**
@@ -62,29 +62,8 @@ class NotasController extends Controller
      */
     public function show($id)
     {
-        $nota = Nota::find($id);
-        if ($nota == null) {
-            abort(404);
-        }
-        $user = $nota->user;
-        
-        $user_logged = Auth::id();
-        $isPublic = '';
-        $isPrivate = '';
-
-        if($nota->is_public == 1) {
-            $isPublic = 'selected';
-        } else {
-            $isPrivate = 'selected';
-        }
-
-        return view('viewnota', [
-            'nota' => $nota,
-            'user' => $user,
-            'user_logged' => $user_logged,
-            'isPublic' => $isPublic,
-            'isPrivate' => $isPrivate
-        ]);
+        $nota = Nota::findOrFail($id);
+        return view('viewnota', ['nota' => $nota]);
     }
 
     /**
@@ -107,13 +86,13 @@ class NotasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $nota = Nota::find($id);        
-        $nota->title = $request->title;
-        $nota->text = $request->text;
-        $nota->is_public = $request->is_public;
-        $nota->save();
+        $nota = Nota::findOrFail($id);        
+        if ($nota->user_id == Auth::id()){
+            $nota->fill($request->all());
+            $nota->save();
+            return redirect()->route('notas.show', $id);
+        } else abort('403');
 
-        return redirect()->route('notas.show', $id);
     }
 
     /**
@@ -125,7 +104,9 @@ class NotasController extends Controller
     public function destroy($id)
     {
         $nota = Nota::find($id);
-        $nota->delete();
-        return redirect()->route('notas.index');
+        if ($nota->user_id == Auth::id()) {
+            $nota->delete();
+            return redirect()->route('notas.index');
+        } else abort('403');        
     }
 }
